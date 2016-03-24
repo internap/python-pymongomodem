@@ -2,13 +2,13 @@ Python pymongo modem
 ===============================
 
 .. image:: https://travis-ci.org/internap/python-pymongomodem.svg?branch=master
-:target: https://travis-ci.org/internap/python-pymongomodem
+  :target: https://travis-ci.org/internap/python-pymongomodem
 
 .. image:: https://img.shields.io/pypi/v/python-pymongomodem.svg?style=flat
-:target: https://pypi.python.org/pypi/python-pymongomodem
+  :target: https://pypi.python.org/pypi/python-pymongomodem
 
 .. image:: https://img.shields.io/github/release/internap/python-pymongomodem.svg?style=flat
-:target: https://github.com/internap/python-pymongomodem/
+  :target: https://github.com/internap/python-pymongomodem/
 
 Usage
 -----
