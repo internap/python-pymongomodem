@@ -11,28 +11,48 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import sys
 from functools import wraps
 
 token_substitutions = [
     ('.', '^')
 ]
 
+PY3 = sys.version_info[0] == 3
 
-def __sanitize_for_token(arg, token, substitute):
-    if hasattr(arg, "__iter__"):
-        for item in arg:
-            __sanitize_for_token(item, token, substitute)
 
-    if isinstance(arg, dict):
-        for key in arg:
-            _key = key
-            if token in key:
-                _key = key.replace(token, substitute)
-                arg[_key] = arg.pop(key)
+if PY3:
+    def __sanitize_for_token(arg, token, substitute):
+        if hasattr(arg, "__iter__") and not isinstance(arg, str):
+            for item in arg:
+                __sanitize_for_token(item, token, substitute)
 
-            if isinstance(arg[_key], dict):
-                __sanitize_for_token(arg[_key], token, substitute)
-    return arg
+        if isinstance(arg, dict):
+            for key in arg:
+                _key = key
+                if token in key:
+                    _key = key.replace(token, substitute)
+                    arg[_key] = arg.pop(key)
+
+                if isinstance(arg[_key], dict):
+                    __sanitize_for_token(arg[_key], token, substitute)
+        return arg
+else:
+    def __sanitize_for_token(arg, token, substitute):
+        if hasattr(arg, "__iter__"):
+            for item in arg:
+                __sanitize_for_token(item, token, substitute)
+
+        if isinstance(arg, dict):
+            for key in arg:
+                _key = key
+                if token in key:
+                    _key = key.replace(token, substitute)
+                    arg[_key] = arg.pop(key)
+
+                if isinstance(arg[_key], dict):
+                    __sanitize_for_token(arg[_key], token, substitute)
+        return arg
 
 
 def __sanitize(arg):
@@ -50,7 +70,7 @@ def encode_input(function):
             sanitized_args.append(__sanitize(arg))
 
         sanitized_kwargs = {}
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             sanitized_kwargs[key] = __sanitize(value)
 
         return function(*sanitized_args, **sanitized_kwargs)
